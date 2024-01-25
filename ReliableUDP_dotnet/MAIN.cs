@@ -2,13 +2,11 @@
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static int Main(string[] args)
     {
-        RudpHeaderM mask = RudpHeaderM.Unreliable;
-        Console.WriteLine($"mask: {mask}");
-        Console.WriteLine($"mask.HasFlag(RudpHeaderM.Unreliable): {mask.HasFlag(RudpHeaderM.Unreliable)}");
         Console.WriteLine("creating socket...");
         using var socket = new RudpSocket();
         Console.WriteLine($"Local IP: {socket.localIP}");
+        return 0;
     }
 }

@@ -13,7 +13,6 @@ namespace _RUDP_
     [Flags]
     public enum RudpHeaderM : byte
     {
-        Unreliable = 0,
         Reliable = 1 << RudpHeaderB.reliable,
         Ack = 1 << RudpHeaderB.ack,
         Reset = 1 << RudpHeaderB.reset,
@@ -25,6 +24,7 @@ namespace _RUDP_
 
     public readonly struct RudpHeader
     {
+        public readonly bool unreliable;
         public const byte SIZE = 4;
         public readonly byte version;
         public readonly RudpHeaderM mask;
@@ -32,20 +32,21 @@ namespace _RUDP_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public RudpHeader(in BinaryReader reader)
+        public RudpHeader(in RudpHeaderM mask, in byte paquetID, in byte channelKey) : this(Util.VERSION, mask, paquetID, channelKey)
         {
-            version = reader.ReadByte();
-            mask = (RudpHeaderM)reader.ReadByte();
-            paquetID = reader.ReadByte();
-            channelKey = reader.ReadByte();
         }
 
-        public RudpHeader(in RudpHeaderM mask, in byte paquetID, in byte channelKey)
+        public RudpHeader(in BinaryReader reader) : this(reader.ReadByte(), (RudpHeaderM)reader.ReadByte(), reader.ReadByte(), reader.ReadByte())
         {
-            version = Util.VERSION;
+        }
+
+        RudpHeader(in byte version, in RudpHeaderM mask, in byte paquetID, in byte channelKey)
+        {
+            this.version = version;
             this.mask = mask;
             this.paquetID = paquetID;
             this.channelKey = channelKey;
+            unreliable = (mask & RudpHeaderM.Reliable) == 0;
         }
 
         //----------------------------------------------------------------------------------------------------------
