@@ -1,9 +1,14 @@
-﻿internal class Program
+﻿using scripts;
+
+internal class Program
 {
+
+    //----------------------------------------------------------------------------------------------------------
+
     private static void Main(string[] args)
     {
-        Console.Write("> ");
-        string? input = Console.ReadLine();
-        Console.WriteLine($"T'as dis \"{input}\", sur ce JME CASSE");
+        Console.WriteLine("creating socket...");
+        using var socket = new NetSocketUDP();
+        Console.WriteLine($"Local IP: {socket.localIP}");
     }
 }
