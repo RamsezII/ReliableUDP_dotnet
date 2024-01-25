@@ -2,20 +2,25 @@ namespace _RUDP_
 {
     enum RudpHeaderB : byte
     {
-        unreliable,
         reliable,
-        reset,
         ack,
+        reset,
+        open,
+        close,
+        _last_,
     }
 
     [Flags]
     public enum RudpHeaderM : byte
     {
-        Unreliable = 1 << RudpHeaderB.unreliable,
+        Unreliable = 0,
         Reliable = 1 << RudpHeaderB.reliable,
-        Reset = 1 << RudpHeaderB.reset,
-        ReliableReset = Reliable | Reset,
         Ack = 1 << RudpHeaderB.ack,
+        Reset = 1 << RudpHeaderB.reset,
+        Open = 1 << RudpHeaderB.open,
+        Close = 1 << RudpHeaderB.close,
+        OpenReliable = Open | Reliable,
+        CloseReliable = Close | Reliable,
     }
 
     public readonly struct RudpHeader

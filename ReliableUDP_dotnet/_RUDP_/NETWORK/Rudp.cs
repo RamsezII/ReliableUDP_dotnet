@@ -9,7 +9,7 @@ namespace _RUDP_
         static readonly byte[] BUFFER = new byte[BUFFER_SIZE];
         static readonly MemoryStream stream = new(BUFFER);
         static readonly BinaryReader reader = new(stream);
-        readonly IPEndPoint? localIP;
+        public readonly IPEndPoint localIP;
         public readonly Dictionary<IPEndPoint, RudpConnection> connections = new();
 
         //----------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace _RUDP_
             this.skipFirstSocketException = skipFirstSocketException;
             ExclusiveAddressUse = false;
             SendTo(BUFFER, 0, 0, SocketFlags.None, Util.END_LOOPBACK);
-            localIP = (IPEndPoint?)LocalEndPoint;
+            localIP = (IPEndPoint)LocalEndPoint;
             BeginReceive();
         }
 
