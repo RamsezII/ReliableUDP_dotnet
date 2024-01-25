@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace _RUDP_
 {
-    public partial class UdpSocket
+    public partial class RudpSocket
     {
         public double lastReceive;
         public uint receive_count, receive_size;
@@ -25,18 +25,18 @@ namespace _RUDP_
                     receive_size += paquetSize;
 
                     IPEndPoint remoteEndIP = (IPEndPoint)remoteEnd;
-                    bool newConnection = ToConnection(remoteEndIP, out UdpConnection recConn);
+                    bool newConnection = ToConnection(remoteEndIP, out RudpConnection recConn);
                     recConn.lastReceive = Util.TotalMilliseconds;
 
-                    Header header = new(reader);
-                    if (paquetSize < Header.SIZE)
+                    RudpHeader header = new(reader);
+                    if (paquetSize < RudpHeader.SIZE)
                         Console.WriteLine($"{paquetSize} bytes from {remoteEnd}");
-                    else if (header.mask.HasFlag(UdpHeaderM.Reliable))
+                    else if (header.mask.HasFlag(RudpHeaderM.Reliable))
                     {
-                        ushort msglen = (ushort)(paquetSize - Header.SIZE);
+                        ushort msglen = (ushort)(paquetSize - RudpHeader.SIZE);
                         if (recConn.channels.TryGetValue(header.channelKey, out var channel))
                             lock (channel.stream)
-                                channel.stream.Write(BUFFER, Header.SIZE, msglen);
+                                channel.stream.Write(BUFFER, RudpHeader.SIZE, msglen);
                     }
                 }
             }

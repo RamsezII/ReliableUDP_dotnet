@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace _RUDP_
 {
-    public partial class UdpSocket
+    public partial class RudpSocket
     {
         public double lastSend;
         public uint send_count, send_size;

@@ -1,16 +1,16 @@
 namespace _RUDP_
 {
-    public class UdpChannel : IDisposable
+    public class RudpChannel : IDisposable
     {
         public readonly MemoryStream stream;
         public readonly BinaryReader reader;
         public readonly BinaryWriter writer;
         public readonly byte id;
-        public readonly UdpConnection conn;
+        public readonly RudpConnection conn;
 
         //----------------------------------------------------------------------------------------------------------
 
-        public UdpChannel(in byte id, in UdpConnection conn)
+        public RudpChannel(in byte id, in RudpConnection conn)
         {
             this.id = id;
             this.conn = conn;

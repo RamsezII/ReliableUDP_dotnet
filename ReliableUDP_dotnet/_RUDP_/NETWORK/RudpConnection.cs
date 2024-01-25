@@ -2,25 +2,20 @@ using System.Net;
 
 namespace _RUDP_
 {
-    public partial class UdpConnection : IDisposable
+    public partial class RudpConnection : IDisposable
     {
         public double lastSend, lastReceive;
-        public readonly UdpSocket socket;
+        public readonly RudpSocket socket;
         public readonly IPEndPoint remoteEnd;
-
-        public readonly Dictionary<byte, UdpChannel> channels = new();
+        public readonly Dictionary<byte, RudpChannel> channels = new();
 
         //----------------------------------------------------------------------------------------------------------
 
-        public UdpConnection(in UdpSocket socket, in IPEndPoint remoteEnd)
+        public RudpConnection(in RudpSocket socket, in IPEndPoint remoteEnd)
         {
             this.socket = socket;
             this.remoteEnd = remoteEnd;
         }
-
-        //----------------------------------------------------------------------------------------------------------
-
-
 
         //----------------------------------------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@ internal class Program
     private static void Main(string[] args)
     {
         Console.WriteLine("creating socket...");
-        using var socket = new UdpSocket();
-        Console.WriteLine($"Local IP: {socket.localIP}");
+        using var socket = new RudpSocket();
+        Console.WriteLine($"Local IP: {RudpSocket.localIP}");
     }
 }
