@@ -19,7 +19,7 @@ namespace _RUDP_
                 {
                     lastReceive = Util.TotalMilliseconds;
                     ++receive_count;
-                    EndPoint remoteEnd = localIP!;
+                    EndPoint remoteEnd = localEndIP!;
                     stream.Position = 0;
                     ushort paquetSize = (ushort)EndReceiveFrom(aResult, ref remoteEnd);
                     receive_size += paquetSize;
@@ -53,7 +53,7 @@ namespace _RUDP_
 
         void BeginReceive()
         {
-            EndPoint receiveEnd = localIP!;
+            EndPoint receiveEnd = localEndIP!;
             try { BeginReceiveFrom(BUFFER, 0, BUFFER_SIZE, SocketFlags.None, ref receiveEnd, ReceiveFrom, null); }
             catch (Exception e) { Console.WriteLine(e.Message.Trim('\n', '\t', '\r')); }
         }

@@ -80,10 +80,7 @@ namespace _RUDP_
                     RudpChannel? channel;
                     lock (channels)
                         if (!channels.TryGetValue(header.channelKey, out channel))
-                            if (header.mask.HasFlag(RudpHeaderM.Open))
-                                channels.Add(header.channelKey, channel = new(header.channelKey, this));
-                            else
-                                return false;
+                            channels.Add(header.channelKey, channel = new(header.channelKey, this));
 
                     lock (channel.stream)
                     {

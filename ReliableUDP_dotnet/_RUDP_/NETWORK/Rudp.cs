@@ -10,7 +10,7 @@ namespace _RUDP_
         public static readonly MemoryStream stream = new(BUFFER);
         public static readonly BinaryWriter writer = new(stream);
         public static readonly BinaryReader reader = new(stream);
-        public readonly IPEndPoint localIP;
+        public readonly IPEndPoint localEndIP;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ namespace _RUDP_
             this.skipFirstSocketException = skipFirstSocketException;
             ExclusiveAddressUse = false;
             SendTo(BUFFER, 0, 0, SocketFlags.None, Util.END_LOOPBACK);
-            localIP = (IPEndPoint)LocalEndPoint;
+            localEndIP = (IPEndPoint)LocalEndPoint;
             BeginReceive();
         }
 

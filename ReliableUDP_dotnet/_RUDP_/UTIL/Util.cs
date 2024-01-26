@@ -13,6 +13,7 @@ namespace _RUDP_
         static Util()
         {
             stopwatch.Start();
+            InitNet();
         }
     }
 }
