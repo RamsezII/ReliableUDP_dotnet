@@ -15,17 +15,31 @@ internal class Program
         using var socket_B = new RudpSocket();
         Console.WriteLine($"portB: {socket_B.localEndIP.Port}");
 
-        socket_A.ToConnection(new IPEndPoint(IPAddress.Loopback, socket_B.localEndIP.Port), out var conn_AtoB);
-        socket_B.ToConnection(new IPEndPoint(IPAddress.Loopback, socket_A.localEndIP.Port), out var conn_BtoA);
+        while (true)
+        {
+            socket_A.ToConnection(new IPEndPoint(IPAddress.Loopback, socket_B.localEndIP.Port), out var conn_AtoB);
 
-        conn_AtoB.stdin.writer.BeginWrite(out ushort prefPos);
-        conn_AtoB.stdin.writer.WriteStr("hello from A");
-        conn_AtoB.stdin.writer.EndWrite(prefPos);
-        conn_AtoB.stdin.SendReliable();
+            Console.Write("AtoB:~$ ");
+            conn_AtoB.stdin.writer.BeginWrite(out ushort prefPos);
+            conn_AtoB.stdin.writer.WriteStr(Console.ReadLine() ?? "");
+            conn_AtoB.stdin.writer.EndWrite(prefPos);
+            conn_AtoB.stdin.SendReliable();
 
-        conn_BtoA.stdout.TriggerLengthBasedBlock();
-        Console.WriteLine(conn_BtoA.stdout.reader.ReadStr());
+            socket_B.ToConnection(new IPEndPoint(IPAddress.Loopback, socket_A.localEndIP.Port), out var conn_BtoA);
+            conn_BtoA.stdout.TriggerLengthBasedBlock();
+            Console.WriteLine("B receive A: " + conn_BtoA.stdout.reader.ReadStr());
 
+            Console.Write("BtoA:~$ ");
+            conn_BtoA.stdin.writer.BeginWrite(out prefPos);
+            conn_BtoA.stdin.writer.WriteStr(Console.ReadLine() ?? "");
+            conn_BtoA.stdin.writer.EndWrite(prefPos);
+            conn_BtoA.stdin.SendReliable();
+
+            conn_AtoB.stdout.TriggerLengthBasedBlock();
+            Console.WriteLine("A receive B: " + conn_AtoB.stdout.reader.ReadStr());
+
+            break;
+        }
         return 0;
     }
 }

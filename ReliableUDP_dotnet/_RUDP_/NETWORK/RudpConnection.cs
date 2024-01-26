@@ -86,16 +86,13 @@ namespace _RUDP_
                             if (!channels.TryGetValue(header.channelKey, out channel))
                                 channels.Add(header.channelKey, channel = new(header.channelKey, this));
 
-                    Console.WriteLine($"{channel} Receiving...");
                     lock (channel.stream)
                     {
                         channel.stream.Write(RudpSocket.BUFFER, RudpHeader.SIZE, msglen);
                         channel.stream.SetLength(msglen);
                         channel.stream.Position = 0;
-                        Console.WriteLine($"{channel} Releasing ReadBlock");
                         channel.signal.Set();
                     }
-                    Console.WriteLine($"{channel} Finished Receiving");
                 }
 
                 last_recID = header.paquetID;

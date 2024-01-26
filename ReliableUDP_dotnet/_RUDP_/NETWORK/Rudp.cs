@@ -35,7 +35,6 @@ namespace _RUDP_
                     return false;
                 else
                 {
-                    Console.WriteLine($"New connection to {remoteEnd}");
                     connections.Add(remoteEnd, conn = new RudpConnection(this, remoteEnd, null));
                     return true;
                 }
