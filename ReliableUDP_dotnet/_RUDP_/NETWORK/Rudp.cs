@@ -10,7 +10,6 @@ namespace _RUDP_
         static readonly MemoryStream stream = new(BUFFER);
         public static readonly BinaryReader reader = new(stream);
         public readonly IPEndPoint localIP;
-        public readonly Dictionary<IPEndPoint, RudpConnection> connections = new();
 
         //----------------------------------------------------------------------------------------------------------
 

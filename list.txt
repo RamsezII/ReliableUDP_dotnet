@@ -1,0 +1,1 @@
+- faire des channels de broadcast, ou un système de broadcast verifié avec buffer partagé

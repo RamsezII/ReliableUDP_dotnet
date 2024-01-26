@@ -19,5 +19,23 @@ namespace _RUDP_
             byte[] buffer = reader.ReadBytes(length);
             return Encoding.UTF8.GetString(buffer);
         }
+
+        public static ushort Remaining(this MemoryStream stream) => (ushort)(stream.Length - stream.Position);
+
+        public static void BeginWrite(this BinaryWriter writer, out ushort prefixePos)
+        {
+            prefixePos = (ushort)writer.BaseStream.Position;
+            writer.Write((ushort)0);
+        }
+        public static void EndWrite(this BinaryWriter writer, in ushort prefixePos)
+        {
+            ushort length = (ushort)(writer.BaseStream.Position - prefixePos - sizeof(ushort));
+            writer.BaseStream.Position = prefixePos;
+            writer.Write(length);
+            writer.BaseStream.Position += length;
+        }
+
+        public static void WriteRudpHeader(this BinaryWriter writer, in RudpHeader header) => header.Write(writer);
+        public static RudpHeader ReadRudpHeader(this BinaryReader reader) => new(reader);
     }
 }

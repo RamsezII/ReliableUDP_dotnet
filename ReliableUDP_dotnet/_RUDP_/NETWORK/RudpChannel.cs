@@ -1,6 +1,9 @@
 namespace _RUDP_
 {
-    public class RudpChannel : IDisposable
+    /// <summary>
+    /// write, then read, then write, then read, etc... like a TCP stream
+    /// </summary>
+    public partial class RudpChannel : IDisposable
     {
         public readonly MemoryStream stream;
         public readonly BinaryReader reader;
@@ -17,6 +20,18 @@ namespace _RUDP_
             stream = new();
             reader = new(stream);
             writer = new(stream);
+        }
+
+        //----------------------------------------------------------------------------------------------------------
+
+        public RudpHeader GetHeader(in RudpHeaderM mask)
+        {
+
+        }
+
+        public void Send()
+        {
+
         }
 
         //----------------------------------------------------------------------------------------------------------

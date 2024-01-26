@@ -80,7 +80,10 @@ namespace _RUDP_
                                 return false;
 
                     lock (channel.stream)
+                    {
                         channel.stream.Write(RudpSocket.BUFFER, RudpHeader.SIZE, msglen);
+                        channel.readAvailable.Set();
+                    }
                 }
 
                 last_recID = header.paquetID;
