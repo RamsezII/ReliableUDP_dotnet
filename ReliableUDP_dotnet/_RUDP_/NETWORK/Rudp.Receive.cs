@@ -31,13 +31,8 @@ namespace _RUDP_
                     RudpHeader header = new(reader);
                     if (paquetSize < RudpHeader.SIZE)
                         Console.WriteLine($"{paquetSize} bytes from {remoteEnd}");
-                    else if (header.mask.HasFlag(RudpHeaderM.Reliable))
-                    {
-                        ushort msglen = (ushort)(paquetSize - RudpHeader.SIZE);
-                        if (recConn.channels.TryGetValue(header.channelKey, out var channel))
-                            lock (channel.stream)
-                                channel.stream.Write(BUFFER, RudpHeader.SIZE, msglen);
-                    }
+                    else
+                        recConn.TryAcceptPaquet(header, paquetSize);
                 }
             }
             catch (SocketException e)

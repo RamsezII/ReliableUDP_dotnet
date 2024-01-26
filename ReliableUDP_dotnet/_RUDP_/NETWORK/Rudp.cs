@@ -23,6 +23,8 @@ namespace _RUDP_
             BeginReceive();
         }
 
+        public override string ToString() => $"(socket:{localEndIP.Port})";
+
         //----------------------------------------------------------------------------------------------------------
 
         public bool ToConnection(in IPEndPoint remoteEnd, out RudpConnection conn)

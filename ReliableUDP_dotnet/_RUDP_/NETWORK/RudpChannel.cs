@@ -10,6 +10,7 @@ namespace _RUDP_
         public readonly BinaryWriter writer;
         public readonly byte id;
         public readonly RudpConnection conn;
+        public bool readAvailable;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -21,6 +22,8 @@ namespace _RUDP_
             reader = new(stream);
             writer = new(stream);
         }
+
+        public override string ToString() => $"{conn} (channel:{id})";
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -34,6 +37,7 @@ namespace _RUDP_
 
         public void SendReliable(in bool loop = true)
         {
+            Console.WriteLine($"{this} Sending...");
             reader.BaseStream.Position = 0;
 
             lock (RudpSocket.BUFFER)
@@ -62,6 +66,38 @@ namespace _RUDP_
                 reader.BaseStream.Position = 0;
                 reader.BaseStream.SetLength(0);
             }
+            Console.WriteLine($"{this} Finished Sending");
+        }
+
+        public ushort TriggerLengthBasedBlock()
+        {
+            Console.WriteLine($"{this} Start Blockread... ({Thread.CurrentThread.Name})");
+            while (stream.Remaining() < sizeof(ushort))
+            {
+                Console.WriteLine($"{this} Into ReadBlock");
+                Console.WriteLine($"{this} Out from ReadBlock");
+            }
+
+            ushort length;
+            lock (stream)
+                length = reader.ReadUInt16();
+
+            TriggerLengthBasedBlock(length);
+
+            return length;
+        }
+
+        public void TriggerLengthBasedBlock(ushort length)
+        {
+            Console.WriteLine($"{this} Blockread {length} bytes...  ({Thread.CurrentThread.Name})");
+            while (stream.Remaining() < length)
+            {
+                Console.WriteLine($"{this} Into ReadBlock");
+                readAvailable.Reset();
+                readAvailable.Wait();
+                Console.WriteLine($"{this} Out from ReadBlock");
+            }
+            Console.WriteLine($"{this} Finished Blockread  ({Thread.CurrentThread.Name})");
         }
 
         //----------------------------------------------------------------------------------------------------------

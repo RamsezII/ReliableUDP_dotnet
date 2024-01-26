@@ -32,6 +32,8 @@ namespace _RUDP_
                 incomingUnreliableStream = new(new MemoryStream());
         }
 
+        public override string ToString() => $"{socket} (conn:{remoteEnd.Port})";
+
         //----------------------------------------------------------------------------------------------------------
 
         public byte GetIncrementedSendID()
@@ -74,19 +76,26 @@ namespace _RUDP_
                             incomingUnreliableStream.BaseStream.Write(RudpSocket.BUFFER, RudpHeader.SIZE, msglen);
                 else
                 {
-                    if (header.paquetID != 1 + last_recID)
-                        return false;
-
                     RudpChannel? channel;
-                    lock (channels)
-                        if (!channels.TryGetValue(header.channelKey, out channel))
-                            channels.Add(header.channelKey, channel = new(header.channelKey, this));
+                    if (header.channelKey == 0)
+                        channel = stdout;
+                    else if (header.channelKey == 1)
+                        channel = stdin;
+                    else
+                        lock (channels)
+                            if (!channels.TryGetValue(header.channelKey, out channel))
+                                channels.Add(header.channelKey, channel = new(header.channelKey, this));
 
+                    Console.WriteLine($"{channel} Receiving...");
                     lock (channel.stream)
                     {
                         channel.stream.Write(RudpSocket.BUFFER, RudpHeader.SIZE, msglen);
+                        channel.stream.SetLength(msglen);
+                        channel.stream.Position = 0;
+                        Console.WriteLine($"{channel} Releasing ReadBlock");
                         channel.readAvailable.Set();
                     }
+                    Console.WriteLine($"{channel} Finished Receiving");
                 }
 
                 last_recID = header.paquetID;

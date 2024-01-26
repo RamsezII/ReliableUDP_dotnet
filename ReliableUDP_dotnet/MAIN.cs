@@ -4,6 +4,8 @@ internal class Program
 {
     private static int Main(string[] args)
     {
+        Thread.CurrentThread.Name = "MAIN";
+
         Console.WriteLine("creating socket A...");
         using var socket_A = new RudpSocket();
         Console.WriteLine($"portA: {socket_A.localEndIP.Port}");
