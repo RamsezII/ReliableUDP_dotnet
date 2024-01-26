@@ -5,10 +5,10 @@ namespace _RUDP_
 {
     public partial class RudpSocket : Socket
     {
-        const ushort BUFFER_SIZE = 1472;
-        static readonly byte[] BUFFER = new byte[BUFFER_SIZE];
+        public const ushort BUFFER_SIZE = 1472;
+        public static readonly byte[] BUFFER = new byte[BUFFER_SIZE];
         static readonly MemoryStream stream = new(BUFFER);
-        static readonly BinaryReader reader = new(stream);
+        public static readonly BinaryReader reader = new(stream);
         public readonly IPEndPoint localIP;
         public readonly Dictionary<IPEndPoint, RudpConnection> connections = new();
 
