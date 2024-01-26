@@ -32,8 +32,7 @@ namespace _RUDP_
                     return false;
                 else
                 {
-                    conn = new RudpConnection(this, remoteEnd, null);
-                    connections.Add(remoteEnd, conn);
+                    connections.Add(remoteEnd, conn = new RudpConnection(this, remoteEnd, null));
                     return true;
                 }
         }

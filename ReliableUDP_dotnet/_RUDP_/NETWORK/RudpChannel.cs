@@ -27,13 +27,15 @@ namespace _RUDP_
         bool TryStartNewPaquet(out RudpHeader header)
         {
             header = new(RudpHeaderM.Reliable, conn.GetIncrementedSendID(), id);
-            RudpSocket.writer.BaseStream.Position = 0;
+            RudpSocket.stream.Position = 0;
             RudpSocket.writer.WriteRudpHeader(header);
             return true;
         }
 
         public void SendReliable(in bool loop = true)
         {
+            reader.BaseStream.Position = 0;
+
             lock (RudpSocket.BUFFER)
             {
                 TryStartNewPaquet(out RudpHeader header);
@@ -48,11 +50,17 @@ namespace _RUDP_
                             TryStartNewPaquet(out header);
                         }
                         RudpSocket.writer.Write(length);
-                        reader.BaseStream.CopyTo(RudpSocket.writer.BaseStream, length);
+                        reader.BaseStream.CopyTo(RudpSocket.stream, length);
                     }
                 }
                 if (RudpSocket.stream.Position > 0)
                     conn.socket.SendTo(conn.remoteEnd);
+            }
+
+            if (reader.BaseStream.Remaining() == 0)
+            {
+                reader.BaseStream.Position = 0;
+                reader.BaseStream.SetLength(0);
             }
         }
 
