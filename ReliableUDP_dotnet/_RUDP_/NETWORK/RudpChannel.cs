@@ -10,7 +10,8 @@ namespace _RUDP_
         public readonly BinaryWriter writer;
         public readonly byte id;
         public readonly RudpConnection conn;
-        public readonly ManualResetEventSlim signal = new(false);
+        public readonly ManualResetEventSlim readReady = new(false);
+        public readonly ManualResetEventSlim sendReady = new(true);
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -71,8 +72,8 @@ namespace _RUDP_
         {
             while (stream.Remaining() < sizeof(ushort))
             {
-                signal.Reset();
-                signal.Wait();
+                readReady.Reset();
+                readReady.Wait();
             }
 
             ushort length;
@@ -88,8 +89,8 @@ namespace _RUDP_
         {
             while (stream.Remaining() < length)
             {
-                signal.Reset();
-                signal.Wait();
+                readReady.Reset();
+                readReady.Wait();
             }
         }
 

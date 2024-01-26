@@ -13,6 +13,7 @@ namespace _RUDP_
         byte lastChannelID;
         readonly BinaryReader incomingUnreliableStream;
         public readonly Action<BinaryReader, ushort> onUnreliablePaquetDirectRead;
+        RudpPaquet pendingPaquet;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -91,7 +92,7 @@ namespace _RUDP_
                         channel.stream.Write(RudpSocket.BUFFER, RudpHeader.SIZE, msglen);
                         channel.stream.SetLength(msglen);
                         channel.stream.Position = 0;
-                        channel.signal.Set();
+                        channel.readReady.Set();
                     }
                 }
 
