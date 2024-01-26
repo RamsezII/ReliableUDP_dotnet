@@ -1,4 +1,5 @@
-﻿using _RUDP_;
+﻿using System.Net;
+using _RUDP_;
 
 internal class Program
 {
@@ -14,8 +15,8 @@ internal class Program
         using var socket_B = new RudpSocket();
         Console.WriteLine($"portB: {socket_B.localEndIP.Port}");
 
-        socket_A.ToConnection(socket_B.localEndIP, out var conn_AtoB);
-        socket_B.ToConnection(socket_A.localEndIP, out var conn_BtoA);
+        socket_A.ToConnection(new IPEndPoint(IPAddress.Loopback, socket_B.localEndIP.Port), out var conn_AtoB);
+        socket_B.ToConnection(new IPEndPoint(IPAddress.Loopback, socket_A.localEndIP.Port), out var conn_BtoA);
 
         conn_AtoB.stdin.writer.BeginWrite(out ushort prefPos);
         conn_AtoB.stdin.writer.WriteStr("hello from A");

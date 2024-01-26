@@ -10,7 +10,7 @@ namespace _RUDP_
         public readonly BinaryWriter writer;
         public readonly byte id;
         public readonly RudpConnection conn;
-        public bool readAvailable;
+        public readonly Signal signal;
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -21,6 +21,7 @@ namespace _RUDP_
             stream = new();
             reader = new(stream);
             writer = new(stream);
+            signal = new(this);
         }
 
         public override string ToString() => $"{conn} (channel:{id})";
@@ -75,6 +76,8 @@ namespace _RUDP_
             while (stream.Remaining() < sizeof(ushort))
             {
                 Console.WriteLine($"{this} Into ReadBlock");
+                signal.Reset();
+                signal.Wait();
                 Console.WriteLine($"{this} Out from ReadBlock");
             }
 
@@ -93,8 +96,8 @@ namespace _RUDP_
             while (stream.Remaining() < length)
             {
                 Console.WriteLine($"{this} Into ReadBlock");
-                readAvailable.Reset();
-                readAvailable.Wait();
+                signal.Reset();
+                signal.Wait();
                 Console.WriteLine($"{this} Out from ReadBlock");
             }
             Console.WriteLine($"{this} Finished Blockread  ({Thread.CurrentThread.Name})");

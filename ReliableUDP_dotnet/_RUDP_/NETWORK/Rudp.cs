@@ -11,6 +11,7 @@ namespace _RUDP_
         public static readonly BinaryWriter writer = new(stream);
         public static readonly BinaryReader reader = new(stream);
         public readonly IPEndPoint localEndIP;
+        public readonly Dictionary<IPEndPoint, RudpConnection> connections = [];
 
         //----------------------------------------------------------------------------------------------------------
 
@@ -34,6 +35,7 @@ namespace _RUDP_
                     return false;
                 else
                 {
+                    Console.WriteLine($"New connection to {remoteEnd}");
                     connections.Add(remoteEnd, conn = new RudpConnection(this, remoteEnd, null));
                     return true;
                 }

@@ -2,8 +2,22 @@ namespace _RUDP_
 {
     public class Signal
     {
-        private bool isSet;
-        private readonly object locker = new object();
+        readonly RudpChannel channel;
+        static byte id;
+        readonly string name;
+        bool isSet;
+        readonly object locker = new();
+
+        //----------------------------------------------------------------------------------------------------------
+
+        public Signal(in RudpChannel channel)
+        {
+            this.channel = channel;
+            name = $"{{ {channel} }} (id:{++id})";
+            Console.WriteLine($"{name} Created");
+        }
+
+        //----------------------------------------------------------------------------------------------------------
 
         public bool IsSet
         {
@@ -16,8 +30,9 @@ namespace _RUDP_
             {
                 lock (locker)
                 {
+                    Console.WriteLine($"{name} Set to {value}");
                     isSet = value;
-                    if (isSet) // Only notify if the signal is set to true.
+                    if (isSet)
                         Monitor.PulseAll(locker);
                 }
             }

@@ -93,7 +93,7 @@ namespace _RUDP_
                         channel.stream.SetLength(msglen);
                         channel.stream.Position = 0;
                         Console.WriteLine($"{channel} Releasing ReadBlock");
-                        channel.readAvailable.Set();
+                        channel.signal.Set();
                     }
                     Console.WriteLine($"{channel} Finished Receiving");
                 }
