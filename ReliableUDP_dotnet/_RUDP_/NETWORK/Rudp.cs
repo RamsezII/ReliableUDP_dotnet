@@ -7,7 +7,8 @@ namespace _RUDP_
     {
         public const ushort BUFFER_SIZE = 1472;
         public static readonly byte[] BUFFER = new byte[BUFFER_SIZE];
-        static readonly MemoryStream stream = new(BUFFER);
+        public static readonly MemoryStream stream = new(BUFFER);
+        public static readonly BinaryWriter writer = new(stream);
         public static readonly BinaryReader reader = new(stream);
         public readonly IPEndPoint localIP;
 
@@ -31,7 +32,7 @@ namespace _RUDP_
                     return false;
                 else
                 {
-                    conn = new RudpConnection(this, remoteEnd);
+                    conn = new RudpConnection(this, remoteEnd, null);
                     connections.Add(remoteEnd, conn);
                     return true;
                 }

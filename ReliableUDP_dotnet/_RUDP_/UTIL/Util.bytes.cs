@@ -20,7 +20,7 @@ namespace _RUDP_
             return Encoding.UTF8.GetString(buffer);
         }
 
-        public static ushort Remaining(this MemoryStream stream) => (ushort)(stream.Length - stream.Position);
+        public static ushort Remaining(this Stream stream) => (ushort)(stream.Length - stream.Position);
 
         public static void BeginWrite(this BinaryWriter writer, out ushort prefixePos)
         {

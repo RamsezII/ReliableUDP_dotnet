@@ -5,8 +5,6 @@ namespace _RUDP_
         eve,
         ack,
         reliable,
-        open,
-        close,
         _last_,
     }
 
@@ -16,10 +14,6 @@ namespace _RUDP_
         Eve = 1 << RudpHeaderB.eve,
         Ack = 1 << RudpHeaderB.ack,
         Reliable = 1 << RudpHeaderB.reliable,
-        Open = 1 << RudpHeaderB.open,
-        Close = 1 << RudpHeaderB.close,
-        OpenReliable = Open | Reliable,
-        CloseReliable = Close | Reliable,
     }
 
     public readonly struct RudpHeader

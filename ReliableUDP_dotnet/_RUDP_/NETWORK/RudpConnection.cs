@@ -34,6 +34,12 @@ namespace _RUDP_
 
         //----------------------------------------------------------------------------------------------------------
 
+        public byte GetIncrementedSendID()
+        {
+            last_sendID = ++last_sendID == 0 ? (byte)1 : last_sendID;
+            return last_sendID;
+        }
+
         public bool TryAddNewChannel(out RudpChannel? channel)
         {
             if (channels.Count < byte.MaxValue - 1)

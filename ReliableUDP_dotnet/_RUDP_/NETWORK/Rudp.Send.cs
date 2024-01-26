@@ -10,14 +10,20 @@ namespace _RUDP_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public void SendTo(in byte[] buffer, in int offset, in int size, in SocketFlags socketFlags, in IPEndPoint targetEnd)
+        public void SendTo(in IPEndPoint targetEnd)
+        {
+            SendTo(BUFFER, 0, (int)stream.Position, targetEnd);
+            stream.Position = 0;
+        }
+
+        public void SendTo(in byte[] buffer, in int offset, in int size, in IPEndPoint targetEnd)
         {
             lock (buffer)
             {
                 lastSend = Util.TotalMilliseconds;
                 ++send_count;
                 send_size += (uint)size;
-                SendTo(buffer, offset, size, socketFlags, targetEnd);
+                SendTo(buffer, offset, size, SocketFlags.None, targetEnd);
             }
         }
     }

@@ -24,14 +24,36 @@ namespace _RUDP_
 
         //----------------------------------------------------------------------------------------------------------
 
-        public RudpHeader GetHeader(in RudpHeaderM mask)
+        bool TryStartNewPaquet(out RudpHeader header)
         {
-
+            header = new(RudpHeaderM.Reliable, conn.GetIncrementedSendID(), id);
+            RudpSocket.writer.BaseStream.Position = 0;
+            RudpSocket.writer.WriteRudpHeader(header);
+            return true;
         }
 
-        public void Send()
+        public void SendReliable(in bool loop = true)
         {
-
+            lock (RudpSocket.BUFFER)
+            {
+                TryStartNewPaquet(out RudpHeader header);
+                while (reader.BaseStream.Remaining() > 0)
+                {
+                    ushort length = reader.ReadUInt16();
+                    if (length > 0)
+                    {
+                        if (length > RudpSocket.stream.Remaining())
+                        {
+                            conn.socket.SendTo(conn.remoteEnd);
+                            TryStartNewPaquet(out header);
+                        }
+                        RudpSocket.writer.Write(length);
+                        reader.BaseStream.CopyTo(RudpSocket.writer.BaseStream, length);
+                    }
+                }
+                if (RudpSocket.stream.Position > 0)
+                    conn.socket.SendTo(conn.remoteEnd);
+            }
         }
 
         //----------------------------------------------------------------------------------------------------------

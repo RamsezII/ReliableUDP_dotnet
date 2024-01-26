@@ -13,21 +13,13 @@ namespace _RUDP_
             if (ToConnection(remoteEnd, out conn))
                 if (conn.TryAddNewChannel(out RudpChannel? channel))
                 {
-                    lock (channel.stream)
-                    {
-                        channel.writer.BeginWrite(out ushort prefixePos);
-                        channel.writer.WriteRudpHeader(channel.GetHeader(RudpHeaderM.OpenReliable));
-                        channel.writer.WriteStr("je tentoie de me connecter");
-                        channel.writer.EndWrite(prefixePos);
-                        channel.Send();
-                    }
-
-                    lock (channel.stream)
-                    {
-                        channel.TriggerLengthBasedBlock();
-                        Console.WriteLine(channel.reader.ReadStr());
-                        return true;
-                    }
+                    channel.writer.BeginWrite(out ushort prefixePos);
+                    channel.writer.WriteStr("JE ME CONNÈCQUE");
+                    channel.writer.EndWrite(prefixePos);
+                    channel.SendReliable();
+                    channel.TriggerLengthBasedBlock();
+                    Console.WriteLine(channel.reader.ReadStr());
+                    return true;
                 }
             return false;
         }
